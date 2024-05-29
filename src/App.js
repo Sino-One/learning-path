@@ -10,6 +10,7 @@ import Protected from "./Components/Atoms/Protected";
 import IsNotAuth from "./Components/Pages/IsNotAuth";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import QcmList from "./Components/Pages/QcmList";
 
 function App() {
   const { user, setUser } = useContext(UserContext);
@@ -26,6 +27,14 @@ function App() {
           element={
             <Protected>
               <h1>Home</h1>
+            </Protected>
+          }
+        />
+        <Route
+          path="/qcm-list"
+          element={
+            <Protected>
+              <QcmList />
             </Protected>
           }
         />

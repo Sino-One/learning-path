@@ -17,7 +17,6 @@ const handleSignIn = async (forms) => {
   try {
     const { data } = await Api.post("api/auth/signin", forms);
     if (data.status === "success") {
-      console.log(data);
       return data;
     } else {
       return data;
