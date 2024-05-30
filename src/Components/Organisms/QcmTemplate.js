@@ -1,19 +1,31 @@
 // src/components/Questionnaire.js
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import Question from "../Atoms/Question";
 import { useLocation, useParams } from "react-router-dom";
+import * as Api from "../../Utils/Api";
+import { UserContext } from "../../store/UserReducer";
+import { toast } from "react-toastify";
 
 const QcmTemplate = () => {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOptions, setSelectedOptions] = useState({});
-  const [questions, setQuestions] = useState([]);
-
   const { formDescription } = useParams();
   const location = useLocation();
-  const { questionnaire } = location.state;
+  const { questionnaire, qcmResponses } = location.state;
+
+  const [currentQuestionIndex, setCurrentQuestionIndex] =
+    useState(qcmResponses);
+  const [selectedOptions, setSelectedOptions] = useState({});
+  const [questions, setQuestions] = useState([]);
+  const { user } = useContext(UserContext);
 
   const handleOptionChange = (questionIndex) => (optionId) => {
+    if (selectedOptions[questionIndex] === optionId) {
+      setSelectedOptions({
+        ...selectedOptions,
+        [questionIndex]: 0,
+      });
+      return;
+    }
     setSelectedOptions({
       ...selectedOptions,
       [questionIndex]: optionId,
@@ -33,7 +45,11 @@ const QcmTemplate = () => {
   }, []);
 
   const handleNext = () => {
-    setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+    if (selectedOptions[currentQuestionIndex]) {
+      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+    } else {
+      toast.info("Veuillez choisir une réponse");
+    }
   };
 
   const handlePrevious = () => {
@@ -41,7 +57,22 @@ const QcmTemplate = () => {
   };
 
   const handleSubmit = () => {
-    console.log("Selected Options: ", selectedOptions);
+    const userResponses = Object.entries(selectedOptions).map(
+      ([questionIndex, selectedOptionId]) => ({
+        userId: user.id,
+        questionnaire_id: questions[0].questionnaire_id,
+        question_id: questions[questionIndex].id,
+        selectedOption_id: selectedOptionId,
+      })
+    );
+
+    Api.post("api/user-responses/save", userResponses)
+      .then((response) => {
+        console.log("Réponses sauvegardées avec succès : ", response.data);
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la sauvegarde des réponses : ", error);
+      });
   };
 
   return (
@@ -53,13 +84,13 @@ const QcmTemplate = () => {
         onOptionChange={handleOptionChange(currentQuestionIndex)}
       />
       <div className="flex justify-between mt-4">
-        {currentQuestionIndex > 0 && (
-          <Button variant="contained" onClick={handlePrevious}>
-            Previous
-          </Button>
-        )}
         {currentQuestionIndex < questions.length - 1 ? (
-          <Button variant="contained" color="primary" onClick={handleNext}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleNext}
+            className="w-full"
+          >
             Next
           </Button>
         ) : (

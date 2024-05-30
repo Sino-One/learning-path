@@ -1,7 +1,6 @@
 // src/components/Question.js
 import React from "react";
-import { FormControl, FormLabel, RadioGroup } from "@mui/material";
-import Option from "./Option";
+import { FormControl, FormLabel } from "@mui/material";
 
 const Question = ({
   questionText,
