@@ -1,22 +1,14 @@
+// src/components/Option.js
 import React from "react";
-import { FormControlLabel, Radio, RadioGroup } from "@material-ui/core";
+import { Radio, FormControlLabel } from "@mui/material";
 
-const Option = ({ text, onChange, checked, name }) => {
-  return (
-    <FormControlLabel
-      control={
-        <Radio
-          checked={checked}
-          onChange={onChange}
-          value={text}
-          name={name}
-          color="primary"
-        />
-      }
-      label={text}
-      className="mb-2"
-    />
-  );
-};
+const Option = ({ optionText, value, checked, onChange }) => (
+  <FormControlLabel
+    value={value}
+    control={<Radio checked={checked} onChange={onChange} />}
+    label={optionText}
+    className="text-gray-800"
+  />
+);
 
 export default Option;

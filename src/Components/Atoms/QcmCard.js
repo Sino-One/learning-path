@@ -1,8 +1,13 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function QcmCard({ questionnaire }) {
+  const navigate = useNavigate();
+
   function goToQcm() {
-    console.log("go to qcm");
+    navigate(`qcm/${questionnaire.form_description}`, {
+      state: { questionnaire },
+    });
   }
 
   return (

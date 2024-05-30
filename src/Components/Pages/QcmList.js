@@ -15,8 +15,8 @@ export default function QcmList() {
 
   return (
     <>
-      {qcmList.map((qcm) => {
-        return <QcmCard questionnaire={qcm} />;
+      {qcmList.map((qcm, index) => {
+        return <QcmCard questionnaire={qcm} key={index} />;
       })}
     </>
   );

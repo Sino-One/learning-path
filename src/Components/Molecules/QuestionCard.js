@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Paper, RadioGroup } from "@material-ui/core";
-import Question from "./Question";
-import Option from "./Option";
+import Option from "../Atoms/Option";
+import Question from "../Atoms/Question";
 
 const QuestionCard = ({ question, options }) => {
   const [selectedOption, setSelectedOption] = useState("");
